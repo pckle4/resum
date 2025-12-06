@@ -3,7 +3,7 @@ import React from 'react';
 import { 
   ArrowRight, LayoutTemplate, CheckCircle2, Linkedin, Twitter, Github, 
   Zap, Shield, Smartphone, FileText, ChevronDown, Wand2, Star, Sparkles,
-  Download, Award
+  Download, Award, User, Code2
 } from './ui/Icons';
 
 interface Props {
@@ -36,7 +36,7 @@ const LandingPage: React.FC<Props> = ({ onGetStarted }) => {
       {/* --- HERO SECTION --- */}
       <div className="relative bg-slate-900 text-white pb-20 pt-6 overflow-hidden">
          {/* Background Decoration */}
-         <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
+         <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
              {/* Mesh Gradients */}
             <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] bg-indigo-600/30 rounded-full blur-[120px] animate-pulse"></div>
             <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-cyan-600/20 rounded-full blur-[100px]"></div>
@@ -235,6 +235,47 @@ const LandingPage: React.FC<Props> = ({ onGetStarted }) => {
              </div>
          </div>
       </section>
+
+       {/* --- ABOUT SECTION --- */}
+       <section className="py-24 bg-slate-50 text-slate-900 relative">
+          <div className="max-w-7xl mx-auto px-6">
+              <div className="bg-white rounded-[3rem] p-10 md:p-20 shadow-2xl border border-slate-100 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-slate-50 rounded-full translate-x-1/2 -translate-y-1/2 opacity-50"></div>
+                  
+                  <div className="grid md:grid-cols-2 gap-16 items-center relative z-10">
+                      <div className="space-y-6">
+                          <span className="text-indigo-600 font-bold tracking-wider text-sm uppercase">About Resume Generator</span>
+                          <h2 className="text-4xl font-bold text-slate-900 leading-tight">Crafted for Professionals, by Developers</h2>
+                          <p className="text-lg text-slate-600 leading-relaxed">
+                              We started this project with a simple mission: to make high-quality career tools accessible to everyone. 
+                              Tired of expensive subscriptions and clunky interfaces, we built a resume builder that focuses on what matters most—content and clean design.
+                          </p>
+                          <div className="grid grid-cols-2 gap-6 pt-4">
+                              <div className="flex items-center gap-3">
+                                  <div className="bg-slate-100 p-2 rounded-lg text-slate-700"><User size={20}/></div>
+                                  <div className="font-bold">User Centric</div>
+                              </div>
+                              <div className="flex items-center gap-3">
+                                  <div className="bg-slate-100 p-2 rounded-lg text-slate-700"><Code2 size={20}/></div>
+                                  <div className="font-bold">Clean Code</div>
+                              </div>
+                          </div>
+                      </div>
+                      <div className="relative">
+                           <div className="aspect-square bg-gradient-to-br from-indigo-500 to-purple-600 rounded-[2rem] rotate-3 shadow-2xl flex items-center justify-center text-white p-10">
+                               <div className="text-center space-y-4">
+                                   <div className="text-6xl font-bold">100%</div>
+                                   <div className="text-2xl font-medium opacity-90">Free & Open</div>
+                                   <div className="w-16 h-1 bg-white/30 mx-auto rounded-full"></div>
+                                   <p className="text-sm opacity-80">No hidden fees. No watermarks.</p>
+                               </div>
+                           </div>
+                           <div className="absolute inset-0 border-4 border-slate-900 rounded-[2rem] -rotate-3 -z-10"></div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+       </section>
 
       {/* --- HOW IT WORKS --- */}
       <section className="py-24 bg-slate-900 text-white relative overflow-hidden">
