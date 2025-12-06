@@ -157,9 +157,7 @@ const printSkillChips = (doc: any, skills: string[], x: number, y: number, maxWi
         // Draw Chip Background
         doc.setFillColor(...colorPrimary); 
         // Light bg for chip: we might want a lighter version of the primary color.
-        // For simplicity, let's use a very light gray/blue standard for modern feel, or opacity if supported.
-        // jsPDF opacity is tricky. Let's use a fixed light color based on theme.
-        // We'll use a standard slate-200 equivalent for background
+        // For simplicity, let's use a fixed light color based on theme.
         doc.setFillColor(226, 232, 240); // slate-200
         doc.setDrawColor(203, 213, 225); // slate-300
         doc.roundedRect(cursorX, cursorY - 4, chipWidth, chipHeight, 1.5, 1.5, 'FD');
@@ -524,12 +522,20 @@ const generateCreative = (doc: any, data: ResumeData) => {
 
     // Avatar Circle
     doc.setFillColor(129, 140, 248);
-    doc.circle(sideX + (sidebarWidth/2), sideY + 15, 20, 'F');
-    // Initials
+    const circleCenterX = sideX + (sidebarWidth/2);
+    const circleCenterY = sideY + 15;
+    doc.circle(circleCenterX, circleCenterY, 20, 'F');
+    
+    // Initials (Centered Calculation)
     doc.setTextColor(255, 255, 255);
-    doc.setFontSize(20);
+    doc.setFontSize(24); // Increased font size for impact
     doc.setFont("helvetica", "bold");
-    doc.text(data.fullName.charAt(0), sideX + (sidebarWidth/2) - 3, sideY + 22);
+    
+    const initial = data.fullName.charAt(0).toUpperCase();
+    const textWidth = doc.getTextWidth(initial);
+    // Center text perfectly: x = center - (width/2)
+    // y = center + (height/3) approx for vertical visual centering
+    doc.text(initial, circleCenterX - (textWidth/2), circleCenterY + 8);
     
     sideY += 50;
 
