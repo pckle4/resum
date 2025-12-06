@@ -5,7 +5,7 @@ import {
   User, Briefcase, GraduationCap, FileText, Plus, Trash2, 
   ChevronRight, ChevronLeft, CheckCircle2,
   Zap, Trophy, ChevronDown, ChevronUp, Upload, X, Languages, Heart,
-  Code2, Terminal, Mail, Phone, MapPin, Globe, Linkedin, Sparkles, AlertCircle, Eye
+  Code2, Terminal, Mail, Phone, MapPin, Globe, Linkedin, Sparkles, AlertCircle, Eye, Download
 } from './ui/Icons';
 import { Input, TagInput, Slider } from './ui/FormElements';
 import { RichTextEditor } from './ui/RichTextEditor';
@@ -699,11 +699,11 @@ const ResumeForm: React.FC<Props> = ({ data, updateData, onReset, onPreview }) =
               <div className="md:hidden pt-4 pb-8">
                  <button 
                     onClick={onPreview}
-                    className="w-full flex items-center justify-center gap-3 bg-indigo-600 text-white py-4 rounded-xl font-bold text-lg shadow-xl shadow-indigo-200 animate-pulse"
+                    className="w-full flex items-center justify-center gap-3 bg-indigo-600 text-white py-4 rounded-xl font-bold text-lg shadow-xl shadow-indigo-200 animate-pulse active:scale-95 transition-transform"
                  >
-                    <Eye size={24} /> Preview & Download PDF
+                    <Download size={24} /> Preview & Download
                  </button>
-                 <p className="text-center text-xs text-slate-400 mt-3">Preview your resume before saving.</p>
+                 <p className="text-center text-xs text-slate-400 mt-3">Ready to export? Preview your resume now.</p>
               </div>
 
               <div className="pt-8 flex justify-center pb-8">
@@ -724,7 +724,7 @@ const ResumeForm: React.FC<Props> = ({ data, updateData, onReset, onPreview }) =
       </div>
 
       {/* Sticky Bottom Navigation - Increased Z-Index and Ensure Visibility */}
-      <div className="px-6 py-4 border-t border-slate-200 bg-white flex justify-between items-center sticky bottom-0 z-50 shadow-[0_-5px_30px_rgba(0,0,0,0.08)]">
+      <div className="px-6 py-4 border-t border-slate-200 bg-white flex justify-between items-center sticky bottom-0 z-[100] shadow-[0_-5px_30px_rgba(0,0,0,0.08)]">
         <button 
           onClick={prevStep}
           disabled={activeStep === 0}
