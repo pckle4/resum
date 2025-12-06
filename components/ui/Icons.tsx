@@ -55,7 +55,8 @@ import {
   Twitter,
   Github,
   TrendingUp,
-  Eye
+  Eye,
+  Smartphone
 } from 'lucide-react';
 
 export {
@@ -113,5 +114,6 @@ export {
   Twitter,
   Github,
   TrendingUp,
-  Eye
+  Eye,
+  Smartphone
 };
