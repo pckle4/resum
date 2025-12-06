@@ -23,9 +23,9 @@ const LandingPage: React.FC<Props> = ({ onGetStarted }) => {
           animation: float 6s ease-in-out infinite;
         }
         @keyframes swing {
-           0% { transform: rotate(5deg); }
-           50% { transform: rotate(-5deg); }
-           100% { transform: rotate(5deg); }
+           0% { transform: rotate(3deg); }
+           50% { transform: rotate(-3deg); }
+           100% { transform: rotate(3deg); }
         }
         .animate-swing {
             transform-origin: top center;
@@ -34,13 +34,12 @@ const LandingPage: React.FC<Props> = ({ onGetStarted }) => {
       `}</style>
       
       {/* --- HERO SECTION --- */}
-      <div className="relative bg-slate-900 text-white pb-20 pt-6 overflow-hidden">
+      <div className="relative bg-slate-900 text-white pb-24 pt-6 overflow-hidden">
          {/* Background Decoration */}
          <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
              {/* Mesh Gradients */}
-            <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] bg-indigo-600/30 rounded-full blur-[120px] animate-pulse"></div>
-            <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-cyan-600/20 rounded-full blur-[100px]"></div>
-            <div className="absolute top-[40%] left-[20%] w-[300px] h-[300px] bg-purple-600/20 rounded-full blur-[80px]"></div>
+            <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] bg-indigo-600/20 rounded-full blur-[120px] animate-pulse"></div>
+            <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-cyan-600/10 rounded-full blur-[100px]"></div>
          </div>
 
          {/* Nav */}
@@ -56,7 +55,7 @@ const LandingPage: React.FC<Props> = ({ onGetStarted }) => {
             </button>
         </nav>
 
-        <main className="relative z-10 max-w-7xl mx-auto px-6 mt-16 md:mt-24 flex flex-col md:flex-row items-center gap-16 lg:gap-24">
+        <main className="relative z-10 max-w-7xl mx-auto px-6 mt-12 md:mt-20 flex flex-col md:flex-row items-center gap-16 lg:gap-24">
             {/* Text Content */}
             <div className="flex-1 text-center md:text-left space-y-8 animate-fadeIn">
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/80 border border-slate-700 text-indigo-300 text-xs font-bold uppercase tracking-wider mb-2 shadow-xl backdrop-blur-md">
@@ -87,7 +86,7 @@ const LandingPage: React.FC<Props> = ({ onGetStarted }) => {
                     </button>
                 </div>
 
-                <div className="flex flex-wrap justify-center md:justify-start gap-x-8 gap-y-3 pt-6 text-sm font-semibold text-slate-400">
+                <div className="flex flex-wrap justify-center md:justify-start gap-x-8 gap-y-3 pt-6 text-sm font-bold text-blue-200/80">
                     <div className="flex items-center gap-2"><CheckCircle2 size={18} className="text-green-400" /> Free Forever</div>
                     <div className="flex items-center gap-2"><CheckCircle2 size={18} className="text-green-400" /> No Sign-up</div>
                     <div className="flex items-center gap-2"><CheckCircle2 size={18} className="text-green-400" /> Privacy First</div>
@@ -95,20 +94,21 @@ const LandingPage: React.FC<Props> = ({ onGetStarted }) => {
             </div>
 
             {/* Visual Decoration - Hanging Resume */}
-            <div className="w-full md:flex-1 relative flex justify-center perspective-[1200px] h-[500px] items-start pt-10">
+            <div className="w-full md:flex-1 relative flex justify-center perspective-[1200px] h-[520px] items-start pt-10">
                 {/* The Rope */}
-                <div className="absolute top-[-100px] left-1/2 w-1 h-[150px] bg-gradient-to-b from-slate-800 to-slate-400 z-0 origin-top animate-swing"></div>
+                <div className="absolute top-[-100px] left-1/2 w-0.5 h-[150px] bg-slate-700/50 z-0 origin-top animate-swing"></div>
                 
-                {/* The Resume */}
+                {/* The Resume Container (Swinging) */}
                 <div className="relative z-10 w-full max-w-[380px] animate-swing origin-top">
                      {/* Clip at top */}
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-32 h-8 bg-slate-800 rounded-lg z-20 shadow-lg flex items-center justify-center">
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-32 h-8 bg-slate-800 rounded-lg z-20 shadow-lg flex items-center justify-center ring-1 ring-slate-700">
                         <div className="w-20 h-1 bg-slate-600 rounded-full"></div>
                     </div>
 
-                    <div className="bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden relative">
+                    {/* Paper */}
+                    <div className="bg-white rounded-xl shadow-2xl border border-slate-800 overflow-hidden relative transform rotate-1">
                          <div className="h-2 bg-indigo-500 w-full"></div>
-                         <div className="p-6 space-y-6">
+                         <div className="p-6 space-y-6 opacity-90">
                              {/* Mock Header */}
                              <div className="flex gap-4 items-center border-b border-slate-100 pb-6">
                                 <div className="w-16 h-16 bg-slate-100 rounded-full border-2 border-indigo-100"></div>
@@ -132,31 +132,24 @@ const LandingPage: React.FC<Props> = ({ onGetStarted }) => {
                                 </div>
                              </div>
                              <div className="flex gap-2 pt-2">
-                                 <div className="h-6 w-16 bg-indigo-100 rounded-full"></div>
-                                 <div className="h-6 w-16 bg-indigo-100 rounded-full"></div>
-                                 <div className="h-6 w-16 bg-indigo-100 rounded-full"></div>
+                                 <div className="h-6 w-16 bg-indigo-50 rounded-full"></div>
+                                 <div className="h-6 w-16 bg-indigo-50 rounded-full"></div>
+                                 <div className="h-6 w-16 bg-indigo-50 rounded-full"></div>
                              </div>
                          </div>
-                         
-                         {/* Floating Badge */}
-                         <div className="absolute bottom-6 -right-6 bg-white p-3 pr-5 rounded-l-xl shadow-xl border-y border-l border-slate-100 flex items-center gap-3 animate-bounce-slow">
-                             <div className="bg-green-100 p-2 rounded-full text-green-600"><CheckCircle2 size={20}/></div>
-                             <div>
-                                 <div className="text-xs font-bold text-slate-800">ATS Score</div>
-                                 <div className="text-sm text-green-600 font-extrabold">98/100</div>
-                             </div>
-                         </div>
+                    </div>
+
+                     {/* Floating Badge - Placed outside the overflow-hidden paper */}
+                     <div className="absolute bottom-24 -right-8 bg-white p-3 pr-5 rounded-l-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] border-y border-l border-slate-100 flex items-center gap-3 animate-bounce-slow z-30">
+                        <div className="bg-green-100 p-2 rounded-full text-green-600"><CheckCircle2 size={20}/></div>
+                        <div>
+                            <div className="text-xs font-bold text-slate-800">ATS Score</div>
+                            <div className="text-sm text-green-600 font-extrabold">98/100</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </main>
-        
-        {/* Curver Bottom */}
-        <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-[0]">
-            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-[calc(100%+1.3px)] h-[60px] md:h-[100px]">
-                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" className="fill-slate-50"></path>
-            </svg>
-        </div>
       </div>
 
       {/* --- FEATURES SECTION --- */}
