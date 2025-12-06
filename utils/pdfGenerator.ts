@@ -12,12 +12,6 @@ const PAGE_WIDTH = 210;
 const PAGE_HEIGHT = 297;
 const MARGIN = 15;
 
-const stripHtml = (html: string) => {
-   const tmp = document.createElement("DIV");
-   tmp.innerHTML = html;
-   return tmp.textContent || tmp.innerText || "";
-};
-
 const ensureUrl = (url: string) => {
     if (!url) return '';
     if (url.startsWith('http')) return url;
@@ -63,12 +57,9 @@ const parseHtml = (html: string): TextToken[] => {
         } else if (part === '</i>' || part === '</em>') {
             isItalic = false;
         } else if (part !== '') {
-            // Handle bullet points at start of text segments that came from <li> replacement
-            // We treated <li> as "\n• " so it's part of text now.
-            // Just split by newlines to handle line breaks correctly if they exist in text
             const lines = part.split('\n');
             lines.forEach((line, i) => {
-                if (i > 0) tokens.push({ text: '\n', isBold: false, isItalic: false, isBullet: false }); // manual line break marker
+                if (i > 0) tokens.push({ text: '\n', isBold: false, isItalic: false, isBullet: false }); 
                 if (line) {
                     tokens.push({ text: line, isBold, isItalic, isBullet: line.trim().startsWith('•') });
                 }
@@ -90,14 +81,12 @@ const printRichText = (doc: any, html: string, x: number, y: number, maxWidth: n
     let cursorY = y;
     
     tokens.forEach(token => {
-        // Handle explicit newlines
         if (token.text === '\n') {
             cursorX = x;
             cursorY += lineHeight;
             return;
         }
 
-        // Set Font Style
         let style = 'normal';
         if (token.isBold && token.isItalic) style = 'bolditalic';
         else if (token.isBold) style = 'bold';
@@ -105,32 +94,22 @@ const printRichText = (doc: any, html: string, x: number, y: number, maxWidth: n
         
         doc.setFont(fontName, style);
 
-        // Word Wrapping Logic
-        const words = token.text.split(/(\s+)/); // split keep delimiters
+        const words = token.text.split(/(\s+)/); 
         
         words.forEach(word => {
-            // Handle bullet indentation
-            let renderText = word;
-            let currentX = cursorX;
-            
-            // If it's a bullet character, add a little hanging indent logic if needed, 
-            // but for simplicity we just render.
-            
-            const wordWidth = doc.getTextWidth(renderText);
+            const wordWidth = doc.getTextWidth(word);
 
-            if (currentX + wordWidth > x + maxWidth) {
-                // New Line
+            if (cursorX + wordWidth > x + maxWidth) {
                 cursorX = x;
                 cursorY += lineHeight;
-                currentX = x;
             }
 
-            doc.text(renderText, currentX, cursorY);
+            doc.text(word, cursorX, cursorY);
             cursorX += wordWidth;
         });
     });
 
-    return cursorY + lineHeight; // Return next Y position
+    return cursorY + lineHeight; 
 };
 
 // --- CHIP RENDERER ---
@@ -154,16 +133,15 @@ const printSkillChips = (doc: any, skills: string[], x: number, y: number, maxWi
             cursorY += chipHeight + gap;
         }
 
-        // Draw Chip Background
         doc.setFillColor(...colorPrimary); 
-        // Light bg for chip: we might want a lighter version of the primary color.
-        // For simplicity, let's use a fixed light color based on theme.
-        doc.setFillColor(226, 232, 240); // slate-200
-        doc.setDrawColor(203, 213, 225); // slate-300
-        doc.roundedRect(cursorX, cursorY - 4, chipWidth, chipHeight, 1.5, 1.5, 'FD');
+        doc.setDrawColor(203, 213, 225); 
+        doc.roundedRect(cursorX, cursorY - 4, chipWidth, chipHeight, 1.5, 1.5, 'F');
 
-        // Draw Text
-        doc.setTextColor(51, 65, 85); // slate-700
+        // Text Contrast Check - simple logic: if primary is dark, text white, else dark
+        // Here we assume light chips for Modern/Minimalist, dark for Creative
+        const isDark = colorPrimary[0] < 100;
+        doc.setTextColor(isDark ? 255 : 51, isDark ? 255 : 65, isDark ? 255 : 85);
+        
         doc.text(skill, cursorX + paddingX, cursorY);
 
         cursorX += chipWidth + gap;
@@ -245,7 +223,6 @@ const generateModern = (doc: any, data: ResumeData) => {
     // Summary
     if (data.summary) {
         mainY = sectionTitle("Professional Summary", mainY, mainMargin);
-        // RICH TEXT
         mainY = printRichText(doc, data.summary, mainMargin, mainY, mainTextW, 10, 'helvetica', [51, 65, 85]);
         mainY += 5;
     }
@@ -260,7 +237,6 @@ const generateModern = (doc: any, data: ResumeData) => {
             doc.setTextColor(30, 41, 59);
             doc.text(exp.position, mainMargin, mainY);
             
-            // Date (Formatted YYYY handled by input validation, but let's ensure cleanup)
             doc.setFont("helvetica", "bold");
             doc.setFontSize(9);
             doc.setTextColor(100, 116, 139);
@@ -275,7 +251,6 @@ const generateModern = (doc: any, data: ResumeData) => {
             doc.text(exp.company, mainMargin, mainY);
 
             mainY += 5;
-            // RICH TEXT DESCRIPTION
             mainY = printRichText(doc, exp.description, mainMargin, mainY, mainTextW, 10, 'helvetica', [51, 65, 85]);
             mainY += 6;
 
@@ -307,7 +282,6 @@ const generateModern = (doc: any, data: ResumeData) => {
             }
 
             mainY += 5;
-            // RICH TEXT
             mainY = printRichText(doc, proj.description, mainMargin, mainY, mainTextW, 10, 'helvetica', [51, 65, 85]);
             mainY += 6;
         });
@@ -355,6 +329,45 @@ const generateModern = (doc: any, data: ResumeData) => {
         sideY += 5;
     }
 
+    // Certifications
+    if (data.certifications.length > 0) {
+        sideY = sideTitle("Certifications", sideY);
+        data.certifications.forEach(cert => {
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(9);
+            doc.setTextColor(30, 41, 59);
+            const nameLines = doc.splitTextToSize(cert.name, sideTextW);
+            doc.text(nameLines, sideMargin, sideY);
+            sideY += (nameLines.length * 3.5);
+
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(8);
+            doc.setTextColor(100, 116, 139);
+            doc.text(`${cert.issuer}, ${cert.year}`, sideMargin, sideY);
+            sideY += 6;
+        });
+        sideY += 4;
+    }
+
+    // Awards
+    if (data.awards.length > 0) {
+        sideY = sideTitle("Awards", sideY);
+        data.awards.forEach(award => {
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(9);
+            doc.setTextColor(30, 41, 59);
+            doc.text(award.name, sideMargin, sideY);
+            sideY += 4;
+
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(8);
+            doc.setTextColor(100, 116, 139);
+            doc.text(`${award.issuer}, ${award.year}`, sideMargin, sideY);
+            sideY += 6;
+        });
+        sideY += 4;
+    }
+
     // Skills (CHIPS)
     if (data.skills.length > 0) {
         sideY = sideTitle("Skills", sideY);
@@ -367,11 +380,24 @@ const generateModern = (doc: any, data: ResumeData) => {
         sideY = sideTitle("Languages", sideY);
         doc.setFont("helvetica", "normal");
         doc.setFontSize(9);
+        doc.setTextColor(51, 65, 85);
         data.languages.forEach(lang => {
             doc.text(`• ${lang}`, sideMargin, sideY);
             sideY += 5;
         });
-        sideY += 10;
+        sideY += 5;
+    }
+
+    // Interests
+    if (data.interests.length > 0) {
+        sideY = sideTitle("Interests", sideY);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(9);
+        doc.setTextColor(51, 65, 85);
+        data.interests.forEach(int => {
+            doc.text(`• ${int}`, sideMargin, sideY);
+            sideY += 5;
+        });
     }
 };
 
@@ -491,17 +517,97 @@ const generateMinimalist = (doc: any, data: ResumeData) => {
         });
     }
 
+    // Grid System for Bottom Sections (Education, etc)
+    const colWidth = (contentW / 2) - 5;
+    let col1Y = cursorY;
+    let col2Y = cursorY;
+
+    // Col 1: Education
+    if (data.education.length > 0) {
+        doc.setFont("times", "bold");
+        doc.setFontSize(12);
+        doc.setTextColor(156, 163, 175); 
+        doc.text("EDUCATION", margin, col1Y);
+        col1Y += 6;
+
+        data.education.forEach(edu => {
+             doc.setFont("helvetica", "bold");
+             doc.setFontSize(10);
+             doc.setTextColor(0,0,0);
+             doc.text(edu.school, margin, col1Y);
+             col1Y += 4;
+             
+             doc.setFont("times", "italic");
+             doc.setFontSize(9);
+             doc.setTextColor(55, 65, 81);
+             doc.text(edu.degree, margin, col1Y);
+             col1Y += 4;
+
+             doc.setFont("helvetica", "normal");
+             doc.setFontSize(8);
+             doc.setTextColor(107, 114, 128);
+             doc.text(edu.year, margin, col1Y);
+             col1Y += 8;
+        });
+        col1Y += 5;
+    }
+
+    // Col 2: Skills & Awards
+    const col2X = margin + colWidth + 10;
+    
     // Skills
     if (data.skills.length > 0) {
-        sectionTitle("Skills");
-        // Minimalist skills are simple text list
+        doc.setFont("times", "bold");
+        doc.setFontSize(12);
+        doc.setTextColor(156, 163, 175); 
+        doc.text("SKILLS", col2X, col2Y);
+        col2Y += 6;
+
         doc.setFont("times", "normal");
-        doc.setFontSize(10);
+        doc.setFontSize(9);
         doc.setTextColor(55, 65, 81);
         const skillsStr = data.skills.join(" • ");
-        const split = doc.splitTextToSize(skillsStr, contentW);
-        doc.text(split, margin, cursorY);
-        cursorY += (split.length * 5) + 10;
+        const split = doc.splitTextToSize(skillsStr, colWidth);
+        doc.text(split, col2X, col2Y);
+        col2Y += (split.length * 4) + 10;
+    }
+
+    // Languages (Col 2 continue)
+    if (data.languages.length > 0) {
+        doc.setFont("times", "bold");
+        doc.setFontSize(12);
+        doc.setTextColor(156, 163, 175); 
+        doc.text("LANGUAGES", col2X, col2Y);
+        col2Y += 6;
+        
+        doc.setFont("times", "normal");
+        doc.setFontSize(9);
+        doc.setTextColor(55, 65, 81);
+        doc.text(data.languages.join(", "), col2X, col2Y);
+        col2Y += 10;
+    }
+
+    // Certs & Awards (Col 1 continue)
+    if (data.certifications.length > 0 || data.awards.length > 0) {
+         doc.setFont("times", "bold");
+         doc.setFontSize(12);
+         doc.setTextColor(156, 163, 175); 
+         doc.text("ACHIEVEMENTS", margin, col1Y);
+         col1Y += 6;
+
+         [...data.certifications, ...data.awards].forEach(item => {
+             doc.setFont("helvetica", "bold");
+             doc.setFontSize(9);
+             doc.setTextColor(0,0,0);
+             doc.text(item.name, margin, col1Y);
+             col1Y += 4;
+             
+             doc.setFont("helvetica", "italic");
+             doc.setFontSize(8);
+             doc.setTextColor(107, 114, 128);
+             doc.text(`${item.issuer}, ${item.year}`, margin, col1Y);
+             col1Y += 6;
+         });
     }
 };
 
@@ -526,15 +632,12 @@ const generateCreative = (doc: any, data: ResumeData) => {
     const circleCenterY = sideY + 15;
     doc.circle(circleCenterX, circleCenterY, 20, 'F');
     
-    // Initials (Centered Calculation)
+    // Initials Center Aligned
     doc.setTextColor(255, 255, 255);
-    doc.setFontSize(28); // Large font
+    doc.setFontSize(28); 
     doc.setFont("helvetica", "bold");
     
     const initial = data.fullName.charAt(0).toUpperCase();
-    
-    // Fix alignment issues by using baseline middle and explicit center
-    // The previous method might have been slightly off visually on some letters
     doc.text(initial, circleCenterX, circleCenterY, { align: 'center', baseline: 'middle' });
     
     sideY += 50;
@@ -572,10 +675,67 @@ const generateCreative = (doc: any, data: ResumeData) => {
     
     sideY += 10;
 
+    // Education in Sidebar
+    if (data.education.length > 0) {
+        sideSection("Education");
+        data.education.forEach(edu => {
+             doc.setFont("helvetica", "bold");
+             doc.setFontSize(10);
+             doc.setTextColor(255, 255, 255);
+             const schoolLines = doc.splitTextToSize(edu.school, sideTextW);
+             doc.text(schoolLines, sideMargin, sideY);
+             sideY += (schoolLines.length * 4);
+
+             doc.setFont("helvetica", "normal");
+             doc.setFontSize(9);
+             doc.setTextColor(199, 210, 254);
+             doc.text(edu.degree, sideMargin, sideY);
+             sideY += 4;
+             
+             doc.setFontSize(8);
+             doc.text(edu.year, sideMargin, sideY);
+             sideY += 8;
+        });
+        sideY += 4;
+    }
+
+    // Skills
     if (data.skills.length > 0) {
         sideSection("Skills");
         // CHIPS for Creative
         sideY = printSkillChips(doc, data.skills, sideMargin, sideY, sideTextW, [99, 102, 241]);
+        sideY += 4;
+    }
+
+    // Awards / Achievements
+    if (data.awards.length > 0) {
+        sideSection("Honors");
+        data.awards.forEach(aw => {
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(9);
+            doc.setTextColor(255, 255, 255);
+            doc.text(aw.name, sideMargin, sideY);
+            sideY += 4;
+            
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(8);
+            doc.setTextColor(199, 210, 254);
+            doc.text(`${aw.issuer} | ${aw.year}`, sideMargin, sideY);
+            sideY += 6;
+        });
+        sideY += 4;
+    }
+
+    // Languages
+    if (data.languages.length > 0) {
+        sideSection("Languages");
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(9);
+        doc.setTextColor(224, 231, 255);
+        data.languages.forEach(l => {
+            doc.text(`• ${l}`, sideMargin, sideY);
+            sideY += 5;
+        });
     }
 
     // --- MAIN CONTENT ---
@@ -614,16 +774,25 @@ const generateCreative = (doc: any, data: ResumeData) => {
 
     if (data.experience.length > 0) {
         mainSection("Experience");
-        doc.setDrawColor(224, 231, 255);
-        doc.setLineWidth(1);
-        doc.line(mainMargin + 6, mainY, mainMargin + 6, PAGE_HEIGHT - 20); // timeline line
-
+        
+        // Timeline line start
+        const timelineStartX = mainMargin + 6;
+        const timelineStartY = mainY;
+        
         data.experience.forEach(exp => {
+            // Draw line segment for this item (heuristic)
+            doc.setDrawColor(224, 231, 255);
+            doc.setLineWidth(1);
+            // We draw line to bottom of this item later or continuous line
+            // Continuous line is better, but difficult to calculate exact height beforehand
+            // Let's just draw a long line and cut it off or just segments
+            doc.line(timelineStartX, mainY, timelineStartX, mainY + 30); // simplistic segment
+
             // Dot
             doc.setFillColor(255, 255, 255);
             doc.setDrawColor(79, 70, 229);
             doc.setLineWidth(0.5);
-            doc.circle(mainMargin + 6, mainY - 1, 2, 'FD');
+            doc.circle(timelineStartX, mainY - 1, 2, 'FD');
 
             doc.setFont("helvetica", "bold");
             doc.setFontSize(12);
@@ -647,6 +816,41 @@ const generateCreative = (doc: any, data: ResumeData) => {
             mainY = printRichText(doc, exp.description, mainMargin + 15, mainY, mainW - 15, 10, 'helvetica', [75, 85, 99]);
             mainY += 10;
         });
+        
+        // Extend line to cover the full block
+        doc.setDrawColor(224, 231, 255);
+        doc.setLineWidth(1);
+        doc.line(timelineStartX, timelineStartY, timelineStartX, mainY - 10);
+    }
+
+    // Projects (Was Missing!)
+    if (data.projects.length > 0) {
+         mainSection("Projects");
+         
+         data.projects.forEach(proj => {
+             // Card Background
+             // We can't know exact height easily without dry run, so we just draw text
+             // To mimic card, we can draw a light rect background behind text if we tracked Y
+             
+             doc.setFillColor(238, 242, 255); // indigo-50
+             doc.rect(mainMargin, mainY - 4, mainW, 6, 'F'); // Header bg
+
+             doc.setFont("helvetica", "bold");
+             doc.setFontSize(11);
+             doc.setTextColor(30, 41, 59);
+             doc.text(proj.name, mainMargin + 2, mainY);
+             
+             if (proj.link) {
+                 const linkW = doc.getTextWidth(proj.name);
+                 doc.setFontSize(9);
+                 doc.setTextColor(79, 70, 229);
+                 doc.textWithLink("View Project", mainMargin + linkW + 5, mainY, { url: ensureUrl(proj.link) });
+             }
+             
+             mainY += 6;
+             mainY = printRichText(doc, proj.description, mainMargin + 2, mainY, mainW - 4, 10, 'helvetica', [75, 85, 99]);
+             mainY += 8;
+         });
     }
 };
 
