@@ -313,8 +313,8 @@ const ResumeForm: React.FC<Props> = ({ data, updateData, onReset, onPreview }) =
       </div>
 
       {/* Form Content Area */}
-      <div className="flex-1 overflow-y-auto px-4 py-8 custom-scrollbar scroll-smooth">
-        <div className="max-w-3xl mx-auto space-y-8 pb-36">
+      <div className="flex-1 overflow-y-auto px-4 py-8 custom-scrollbar scroll-smooth pb-40">
+        <div className="max-w-3xl mx-auto space-y-8">
           
           {/* STEP 0: PERSONAL */}
           {activeStep === 0 && (
@@ -723,8 +723,8 @@ const ResumeForm: React.FC<Props> = ({ data, updateData, onReset, onPreview }) =
         </div>
       </div>
 
-      {/* Sticky Bottom Navigation - Increased Z-Index and Ensure Visibility */}
-      <div className="px-6 py-4 border-t border-slate-200 bg-white flex justify-between items-center sticky bottom-0 z-[100] shadow-[0_-5px_30px_rgba(0,0,0,0.08)]">
+      {/* Sticky Bottom Navigation - Fixed on Mobile to ensure visibility over content */}
+      <div className="fixed bottom-0 left-0 w-full md:sticky md:bottom-0 md:w-auto px-6 py-4 border-t border-slate-200 bg-white flex justify-between items-center z-[100] shadow-[0_-5px_30px_rgba(0,0,0,0.15)] md:shadow-[0_-5px_30px_rgba(0,0,0,0.08)] safe-area-bottom">
         <button 
           onClick={prevStep}
           disabled={activeStep === 0}
@@ -742,7 +742,7 @@ const ResumeForm: React.FC<Props> = ({ data, updateData, onReset, onPreview }) =
           </button>
         ) : (
           <div className="flex gap-2">
-             {/* Mobile Only: Small Preview Button (Redundant but safe) */}
+             {/* Mobile: Preview Button on final step in footer */}
              <button 
                 onClick={onPreview}
                 className="md:hidden flex items-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 text-white font-bold shadow-lg text-sm"
