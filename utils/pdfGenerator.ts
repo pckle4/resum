@@ -532,10 +532,9 @@ const generateCreative = (doc: any, data: ResumeData) => {
     doc.setFont("helvetica", "bold");
     
     const initial = data.fullName.charAt(0).toUpperCase();
-    const textWidth = doc.getTextWidth(initial);
-    // Center text perfectly: x = center - (width/2)
-    // y = center + (height/3) approx for vertical visual centering
-    doc.text(initial, circleCenterX - (textWidth/2), circleCenterY + 8);
+    
+    // Use center alignment to ensure perfect spacing for any letter
+    doc.text(initial, circleCenterX, circleCenterY + 9, { align: 'center' });
     
     sideY += 50;
 
