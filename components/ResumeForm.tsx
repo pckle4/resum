@@ -21,8 +21,8 @@ const steps = [
   { id: 'personal', title: 'Personal', icon: User },
   { id: 'experience', title: 'Experience', icon: Briefcase },
   { id: 'education', title: 'Education', icon: GraduationCap },
-  { id: 'achievements', title: 'Projects & Awards', icon: Trophy },
-  { id: 'skills', title: 'Skills & Finalize', icon: FileText },
+  { id: 'achievements', title: 'Projects', icon: Trophy },
+  { id: 'skills', title: 'Finalize', icon: FileText },
 ];
 
 const PREDEFINED_SKILLS = [
@@ -282,9 +282,9 @@ const ResumeForm: React.FC<Props> = ({ data, updateData, onReset, onPreview }) =
   };
 
   return (
-    <div className="flex flex-col h-full bg-slate-50">
+    <div className="flex flex-col h-full bg-slate-50 relative">
       {/* Sleek Minimalist Tabs */}
-      <div className="bg-white border-b border-slate-200 sticky top-0 z-30 px-6 overflow-x-auto hide-scrollbar flex items-center gap-8 shadow-sm">
+      <div className="bg-white border-b border-slate-200 sticky top-0 z-40 px-6 overflow-x-auto hide-scrollbar flex items-center gap-8 shadow-sm">
         {steps.map((step, idx) => {
            const isActive = idx === activeStep;
            const isCompleted = idx < activeStep;
@@ -313,8 +313,8 @@ const ResumeForm: React.FC<Props> = ({ data, updateData, onReset, onPreview }) =
       </div>
 
       {/* Form Content Area */}
-      <div className="flex-1 overflow-y-auto px-4 py-8 custom-scrollbar">
-        <div className="max-w-3xl mx-auto space-y-8 pb-32">
+      <div className="flex-1 overflow-y-auto px-4 py-8 custom-scrollbar scroll-smooth">
+        <div className="max-w-3xl mx-auto space-y-8 pb-36">
           
           {/* STEP 0: PERSONAL */}
           {activeStep === 0 && (
@@ -695,7 +695,18 @@ const ResumeForm: React.FC<Props> = ({ data, updateData, onReset, onPreview }) =
                 icon={<Heart size={18} className="text-rose-500"/>}
               />
 
-              <div className="pt-8 flex justify-center">
+              {/* Mobile Only: Big Preview Button in Content Flow to ensure visibility */}
+              <div className="md:hidden pt-4 pb-8">
+                 <button 
+                    onClick={onPreview}
+                    className="w-full flex items-center justify-center gap-3 bg-indigo-600 text-white py-4 rounded-xl font-bold text-lg shadow-xl shadow-indigo-200 animate-pulse"
+                 >
+                    <Eye size={24} /> Preview & Download PDF
+                 </button>
+                 <p className="text-center text-xs text-slate-400 mt-3">Preview your resume before saving.</p>
+              </div>
+
+              <div className="pt-8 flex justify-center pb-8">
                  <button 
                     onClick={() => {
                         if(window.confirm("Are you sure you want to clear all data? This cannot be undone.")) {
@@ -712,8 +723,8 @@ const ResumeForm: React.FC<Props> = ({ data, updateData, onReset, onPreview }) =
         </div>
       </div>
 
-      {/* Sticky Bottom Navigation */}
-      <div className="px-6 py-4 border-t border-slate-200 bg-white flex justify-between items-center sticky bottom-0 z-30 shadow-[0_-5px_20px_rgba(0,0,0,0.03)]">
+      {/* Sticky Bottom Navigation - Increased Z-Index and Ensure Visibility */}
+      <div className="px-6 py-4 border-t border-slate-200 bg-white flex justify-between items-center sticky bottom-0 z-50 shadow-[0_-5px_30px_rgba(0,0,0,0.08)]">
         <button 
           onClick={prevStep}
           disabled={activeStep === 0}
@@ -731,12 +742,12 @@ const ResumeForm: React.FC<Props> = ({ data, updateData, onReset, onPreview }) =
           </button>
         ) : (
           <div className="flex gap-2">
-             {/* Mobile Only: Preview Button */}
+             {/* Mobile Only: Small Preview Button (Redundant but safe) */}
              <button 
                 onClick={onPreview}
                 className="md:hidden flex items-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 text-white font-bold shadow-lg text-sm"
              >
-                <Eye size={18} /> Finish & Preview
+                <Eye size={18} /> Preview
              </button>
              {/* Desktop Only: Status Indicator */}
              <div className="hidden md:flex text-sm font-bold text-green-600 items-center gap-2 bg-green-50 px-6 py-3 rounded-xl border border-green-100">
