@@ -747,7 +747,7 @@ const ResumeForm: React.FC<Props> = ({ data, updateData, onReset, onPreview }) =
                 onClick={onPreview}
                 className="md:hidden flex items-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 text-white font-bold shadow-lg text-sm"
              >
-                <Eye size={18} /> Preview
+                <Eye size={18} /> Preview & Download
              </button>
              {/* Desktop Only: Status Indicator */}
              <div className="hidden md:flex text-sm font-bold text-green-600 items-center gap-2 bg-green-50 px-6 py-3 rounded-xl border border-green-100">
