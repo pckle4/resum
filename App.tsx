@@ -240,7 +240,7 @@ const App: React.FC = () => {
 
   // --- EDITOR SPLIT VIEW ---
   return (
-    <div className="h-screen w-full flex flex-col md:flex-row bg-slate-100 overflow-hidden font-sans">
+    <div className="h-[100dvh] w-full flex flex-col md:flex-row bg-slate-100 overflow-hidden font-sans">
       <style>{`
         @keyframes shimmer {
           0% { transform: translateX(-100%); }
