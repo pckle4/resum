@@ -528,13 +528,14 @@ const generateCreative = (doc: any, data: ResumeData) => {
     
     // Initials (Centered Calculation)
     doc.setTextColor(255, 255, 255);
-    doc.setFontSize(24); // Increased font size for impact
+    doc.setFontSize(28); // Large font
     doc.setFont("helvetica", "bold");
     
     const initial = data.fullName.charAt(0).toUpperCase();
     
-    // Use center alignment to ensure perfect spacing for any letter
-    doc.text(initial, circleCenterX, circleCenterY + 9, { align: 'center' });
+    // Fix alignment issues by using baseline middle and explicit center
+    // The previous method might have been slightly off visually on some letters
+    doc.text(initial, circleCenterX, circleCenterY, { align: 'center', baseline: 'middle' });
     
     sideY += 50;
 
