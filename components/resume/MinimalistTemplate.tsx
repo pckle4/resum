@@ -30,13 +30,14 @@ const getProfileUrl = (platform: string, value: string) => {
 const MinimalistTemplate: React.FC<Props> = ({ data, isSkeleton = false }) => {
   if (isSkeleton) {
      return (
-        <div className="w-full h-full bg-white p-[60px] flex flex-col gap-8">
+        <div className="w-full h-full bg-white p-[60px] flex flex-col gap-8 overflow-hidden">
             {/* Skeleton Header */}
             <header className="border-b-2 border-gray-900 pb-8 shrink-0 flex justify-between">
                 <div className="space-y-4 w-3/4">
                     <div className="w-3/4 h-10 bg-gray-900 rounded-sm" />
                     <div className="w-1/2 h-6 bg-gray-300 rounded-sm" />
                     <div className="flex gap-4 mt-2">
+                        <div className="w-20 h-2 bg-gray-200 rounded-sm" />
                         <div className="w-20 h-2 bg-gray-200 rounded-sm" />
                         <div className="w-20 h-2 bg-gray-200 rounded-sm" />
                     </div>
@@ -51,13 +52,14 @@ const MinimalistTemplate: React.FC<Props> = ({ data, isSkeleton = false }) => {
                     <div className="space-y-2">
                         <div className="w-full h-2 bg-gray-100 rounded-sm" />
                         <div className="w-full h-2 bg-gray-100 rounded-sm" />
+                        <div className="w-full h-2 bg-gray-100 rounded-sm" />
                         <div className="w-3/4 h-2 bg-gray-100 rounded-sm" />
                     </div>
                 </div>
 
                 <div className="space-y-6">
                     <div className="w-40 h-3 bg-gray-300 rounded-sm border-b border-gray-100 pb-2" />
-                    {[1, 2, 3].map(i => (
+                    {[1, 2, 3, 4, 5, 6].map(i => (
                         <div key={i} className="pl-4 border-l-2 border-gray-900 space-y-2">
                              <div className="flex justify-between">
                                  <div className="w-1/3 h-4 bg-gray-800 rounded-sm" />
@@ -65,6 +67,7 @@ const MinimalistTemplate: React.FC<Props> = ({ data, isSkeleton = false }) => {
                              </div>
                              <div className="w-1/4 h-3 bg-gray-400 rounded-sm" />
                              <div className="w-full h-2 bg-gray-100 rounded-sm mt-1" />
+                             <div className="w-full h-2 bg-gray-100 rounded-sm" />
                              <div className="w-5/6 h-2 bg-gray-100 rounded-sm" />
                         </div>
                     ))}
@@ -72,13 +75,14 @@ const MinimalistTemplate: React.FC<Props> = ({ data, isSkeleton = false }) => {
 
                 <div className="space-y-6">
                     <div className="w-40 h-3 bg-gray-300 rounded-sm border-b border-gray-100 pb-2" />
-                    {[1, 2].map(i => (
+                    {[1, 2, 3].map(i => (
                         <div key={i} className="pl-4 space-y-2">
                              <div className="flex justify-between">
                                  <div className="w-1/3 h-4 bg-gray-800 rounded-sm" />
                                  <div className="w-20 h-3 bg-gray-200 rounded-sm" />
                              </div>
                              <div className="w-full h-2 bg-gray-100 rounded-sm mt-1" />
+                             <div className="w-5/6 h-2 bg-gray-100 rounded-sm" />
                         </div>
                     ))}
                 </div>
@@ -88,11 +92,13 @@ const MinimalistTemplate: React.FC<Props> = ({ data, isSkeleton = false }) => {
                          <div className="w-24 h-3 bg-gray-300 rounded-sm" />
                          <div className="w-full h-2 bg-gray-100 rounded-sm" />
                          <div className="w-full h-2 bg-gray-100 rounded-sm" />
+                         <div className="w-full h-2 bg-gray-100 rounded-sm" />
                      </div>
                      <div className="space-y-3">
                          <div className="w-24 h-3 bg-gray-300 rounded-sm" />
                          <div className="w-full h-2 bg-gray-100 rounded-sm" />
                          <div className="w-2/3 h-2 bg-gray-100 rounded-sm" />
+                         <div className="w-full h-2 bg-gray-100 rounded-sm" />
                      </div>
                      <div className="space-y-3">
                          <div className="w-24 h-3 bg-gray-300 rounded-sm" />
