@@ -1,10 +1,11 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { INITIAL_RESUME_DATA, ResumeData, TemplateType, EMPTY_RESUME_DATA } from './types';
 import ResumeForm from './components/ResumeForm';
 import ResumePreview from './components/ResumePreview';
 import LandingPage from './components/LandingPage';
 import TemplateSelection from './components/TemplateSelection';
-import { Download, ChevronLeft, LayoutTemplate, FileImage, FileType, FileText, Loader2, Save, AlertCircle, PartyPopper, ArrowLeft, Plus } from './components/ui/Icons';
+import { Download, ChevronLeft, LayoutTemplate, FileImage, FileType, FileText, Loader2, Save, AlertCircle, PartyPopper, ArrowLeft, Plus, Eye, Edit } from './components/ui/Icons';
 import { saveToDB, loadFromDB, clearDB } from './utils/db';
 import { generatePDF } from './utils/pdfGenerator';
 
@@ -25,6 +26,9 @@ const App: React.FC = () => {
   const [view, setView] = useState<ViewState>(ViewState.LANDING);
   const [resumeData, setResumeData] = useState<ResumeData>(INITIAL_RESUME_DATA);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
+
+  // Mobile Tab State
+  const [mobileTab, setMobileTab] = useState<'editor' | 'preview'>('editor');
 
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateType>(TemplateType.MODERN);
   const [scale, setScale] = useState(0.45);
@@ -80,7 +84,7 @@ const App: React.FC = () => {
           // A4 width is 794px. We need to fit it into width - padding.
           const padding = 32;
           const availableWidth = width - padding;
-          const newScale = Math.min(availableWidth / 794, 1);
+          const newScale = Math.min(availableWidth / 794, 0.6); // Cap scale for mobile readability
           setScale(newScale);
       } else {
           // Desktop preview scale
@@ -125,6 +129,7 @@ const App: React.FC = () => {
 
   const handleBackToEditor = () => {
       setView(ViewState.EDITOR);
+      setMobileTab('editor');
   };
 
   const handleCreateNew = async () => {
@@ -288,7 +293,7 @@ const App: React.FC = () => {
 
   // --- EDITOR SPLIT VIEW ---
   return (
-    <div className="h-[100dvh] w-full flex flex-col md:flex-row bg-slate-100 overflow-hidden font-sans">
+    <div className="h-[100dvh] w-full flex flex-col md:flex-row bg-slate-100 overflow-hidden font-sans relative">
       <style>{`
         @keyframes shimmer {
           0% { transform: translateX(-100%); }
@@ -299,6 +304,22 @@ const App: React.FC = () => {
         }
       `}</style>
 
+      {/* MOBILE TAB SWITCHER */}
+      <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white p-1.5 rounded-full shadow-2xl flex items-center gap-1 border border-slate-700/50">
+          <button
+            onClick={() => setMobileTab('editor')}
+            className={`px-4 py-2.5 rounded-full text-xs font-bold transition-all flex items-center gap-2 ${mobileTab === 'editor' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-white'}`}
+          >
+            <Edit size={14} /> Editor
+          </button>
+          <button
+            onClick={() => setMobileTab('preview')}
+            className={`px-4 py-2.5 rounded-full text-xs font-bold transition-all flex items-center gap-2 ${mobileTab === 'preview' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-white'}`}
+          >
+            <Eye size={14} /> Preview
+          </button>
+      </div>
+
       {isDownloading && (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[100] flex flex-col items-center justify-center text-white animate-fadeIn">
            <Loader2 size={48} className="animate-spin mb-4" />
@@ -308,7 +329,10 @@ const App: React.FC = () => {
       )}
 
       {/* LEFT PANEL (EDITOR) */}
-      <div className="w-full md:w-[65%] lg:w-[65%] h-full flex flex-col border-r border-slate-200 bg-white z-20 shadow-xl relative">
+      <div className={`
+          w-full md:w-[65%] lg:w-[65%] h-full flex-col border-r border-slate-200 bg-white z-20 shadow-xl relative
+          ${mobileTab === 'editor' ? 'flex' : 'hidden'} md:flex
+      `}>
         <header className="h-16 px-4 md:px-6 border-b border-slate-100 flex items-center justify-between bg-white shrink-0">
           <div className="flex items-center gap-3">
              <button 
@@ -333,10 +357,6 @@ const App: React.FC = () => {
                 </div>
              </div>
           </div>
-          
-          <div className="flex items-center gap-4">
-             {/* No Progress Bar here anymore - minimal look */}
-          </div>
         </header>
         
         <div className="flex-1 overflow-hidden relative">
@@ -348,9 +368,12 @@ const App: React.FC = () => {
         </div>
       </div>
 
-      {/* RIGHT PANEL (DESKTOP PREVIEW) */}
-      <div className="hidden md:flex flex-1 flex-col h-full bg-slate-200/50 relative overflow-hidden">
-        <div className="h-16 px-6 flex items-center justify-between border-b border-slate-200/50 bg-white/80 backdrop-blur-sm z-20 shrink-0">
+      {/* RIGHT PANEL (PREVIEW & DOWNLOAD) */}
+      <div className={`
+          w-full md:flex-1 flex-col h-full bg-slate-200/50 relative overflow-hidden
+          ${mobileTab === 'preview' ? 'flex' : 'hidden'} md:flex
+      `}>
+        <div className="h-16 px-4 md:px-6 flex items-center justify-between border-b border-slate-200/50 bg-white/80 backdrop-blur-sm z-20 shrink-0">
           <div className="flex items-center gap-2 text-sm text-slate-500">
              <LayoutTemplate size={16} /> 
              <span className="font-medium">Live Preview</span>
@@ -358,16 +381,17 @@ const App: React.FC = () => {
 
           <div className="flex items-center gap-4 relative" ref={menuRef}>
               {!isReadyForDownload && (
-                 <div className="flex items-center gap-1.5 text-[10px] font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-100 animate-pulse">
+                 <div className="flex items-center gap-1.5 text-[10px] font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-100 animate-pulse whitespace-nowrap">
                     <AlertCircle size={12} />
-                    Complete details
+                    <span className="hidden sm:inline">Complete details</span>
+                    <span className="sm:hidden">Incomplete</span>
                  </div>
               )}
 
              <button 
                 onClick={() => !isDownloading && isReadyForDownload && setShowDownloadMenu(!showDownloadMenu)}
                 disabled={isDownloading || !isReadyForDownload}
-                className={`flex items-center gap-2 px-5 py-2 rounded-xl font-bold text-xs transition-all shadow-lg transform active:translate-y-0 border
+                className={`flex items-center gap-2 px-4 md:px-5 py-2 rounded-xl font-bold text-xs transition-all shadow-lg transform active:translate-y-0 border
                     ${isReadyForDownload 
                         ? 'bg-slate-900 text-white border-slate-900 hover:bg-indigo-600 hover:border-indigo-600 hover:shadow-indigo-300 hover:-translate-y-0.5' 
                         : 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed shadow-none'
@@ -375,7 +399,7 @@ const App: React.FC = () => {
                 `}
               >
                 <Download size={14} />
-                Export PDF
+                Export
               </button>
 
               {showDownloadMenu && (
@@ -416,7 +440,7 @@ const App: React.FC = () => {
         </div>
 
         {/* Removed 'custom-scrollbar' to hide bars but kept scrolling capability via overflow-auto */}
-        <div className="flex-1 overflow-auto bg-slate-100 relative hide-scrollbar flex items-start justify-center pt-8 pb-20">
+        <div className="flex-1 overflow-auto bg-slate-100 relative hide-scrollbar flex items-start justify-center pt-8 pb-32 md:pb-20">
              <div id="resume-preview-container" className="transition-transform duration-200 origin-top shadow-2xl" style={{ transform: `scale(${scale})` }}>
                 <ResumePreview 
                   ref={previewContainerRef} 
