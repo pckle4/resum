@@ -43,7 +43,6 @@ const TemplateSelection: React.FC<Props> = ({ selectedTemplate, onSelect, onNext
   // 180 / 794 = ~0.2267
   // We need to ensure the container height is exactly A4 height * scale.
   const PREVIEW_SCALE = 0.2267; 
-  const CARD_WIDTH = 180;
   const A4_HEIGHT = 1123;
   const PREVIEW_HEIGHT = A4_HEIGHT * PREVIEW_SCALE;
 
@@ -72,7 +71,8 @@ const TemplateSelection: React.FC<Props> = ({ selectedTemplate, onSelect, onNext
 
       {/* Main Grid */}
       <div className="flex-1 overflow-y-auto p-4 md:p-12">
-         <div className="max-w-5xl mx-auto grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-8 pb-12 overflow-x-auto snap-x snap-mandatory hide-scrollbar md:overflow-visible justify-center">
+         {/* Updated Layout: Horizontal scroll on mobile (flex), Grid on Desktop */}
+         <div className="max-w-5xl mx-auto flex flex-nowrap md:grid md:grid-cols-3 gap-8 pb-12 overflow-x-auto snap-x snap-mandatory hide-scrollbar md:overflow-visible px-4 md:px-0 scroll-smooth">
             {templates.map((template) => {
                 const isSelected = selectedTemplate === template.id;
                 
@@ -82,7 +82,7 @@ const TemplateSelection: React.FC<Props> = ({ selectedTemplate, onSelect, onNext
                         onClick={() => onSelect(template.id)}
                         className={`
                             group relative bg-white rounded-2xl overflow-hidden cursor-pointer transition-all duration-300
-                            border-2 shrink-0 snap-center w-[180px]
+                            border-2 shrink-0 snap-center min-w-[260px] md:min-w-0
                             ${isSelected 
                                 ? `border-transparent ring-4 ${template.accentColor} shadow-2xl scale-[1.02] z-10` 
                                 : 'border-slate-200 hover:border-slate-300 hover:shadow-xl hover:-translate-y-1'
@@ -95,11 +95,14 @@ const TemplateSelection: React.FC<Props> = ({ selectedTemplate, onSelect, onNext
                             style={{ height: `${PREVIEW_HEIGHT}px` }}
                         >
                              {/* The actual resume preview scaled down */}
+                             {/* We need to adjust scale for the mobile card width which is wider than the desktop card usually */}
                              <div 
-                                  className="absolute top-0 left-0 origin-top-left pointer-events-none select-none bg-white"
-                                  style={{ transform: `scale(${PREVIEW_SCALE})` }}
+                                  className="absolute top-0 left-0 origin-top-left pointer-events-none select-none bg-white w-full h-full flex justify-center"
                               >
-                                  <ResumePreview data={TEMPLATE_PREVIEW_DATA} template={template.id} isSkeleton={true} />
+                                  {/* Just centering the preview for the card view */}
+                                  <div style={{ transform: `scale(${PREVIEW_SCALE})`, transformOrigin: 'top center' }}>
+                                    <ResumePreview data={TEMPLATE_PREVIEW_DATA} template={template.id} isSkeleton={true} />
+                                  </div>
                              </div>
 
                              {/* Hover Overlay */}
