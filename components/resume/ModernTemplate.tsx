@@ -32,7 +32,7 @@ const getProfileUrl = (platform: string, value: string) => {
 const ModernTemplate: React.FC<Props> = ({ data, isSkeleton = false }) => {
   if (isSkeleton) {
     return (
-      <div className="w-full h-full bg-white flex flex-col font-sans">
+      <div className="w-full h-full bg-white flex flex-col font-sans overflow-hidden">
         {/* Skeleton Header */}
         <div className="bg-slate-900 p-8 flex gap-6 items-center shrink-0 border-b border-slate-800">
           <div className="w-24 h-24 rounded-full bg-slate-800 border-4 border-slate-700/50 shrink-0" />
@@ -47,26 +47,27 @@ const ModernTemplate: React.FC<Props> = ({ data, isSkeleton = false }) => {
           </div>
         </div>
 
-        <div className="flex flex-1">
+        <div className="flex flex-1 items-stretch">
           {/* Skeleton Main */}
           <div className="w-[66%] p-8 border-r border-slate-100 flex flex-col gap-8">
              <div className="space-y-3">
                 <div className="w-1/4 h-3 bg-slate-300 rounded mb-2" />
                 <div className="w-full h-2 bg-slate-100 rounded" />
                 <div className="w-full h-2 bg-slate-100 rounded" />
+                <div className="w-full h-2 bg-slate-100 rounded" />
                 <div className="w-5/6 h-2 bg-slate-100 rounded" />
              </div>
              
-             <div className="space-y-6">
+             <div className="space-y-6 flex-1">
                 <div className="w-1/4 h-3 bg-slate-300 rounded mb-2" />
-                {[1, 2, 3, 4].map(i => (
+                {[1, 2, 3, 4, 5, 6].map(i => (
                   <div key={i} className="space-y-2">
                      <div className="flex justify-between">
                         <div className="w-1/3 h-3 bg-slate-200 rounded" />
                         <div className="w-16 h-3 bg-slate-100 rounded" />
                      </div>
                      <div className="w-1/4 h-2 bg-indigo-50 rounded" />
-                     <div className="space-y-1 mt-1">
+                     <div className="space-y-1.5 mt-1">
                         <div className="w-full h-1.5 bg-slate-50 rounded" />
                         <div className="w-full h-1.5 bg-slate-50 rounded" />
                         <div className="w-3/4 h-1.5 bg-slate-50 rounded" />
@@ -77,12 +78,12 @@ const ModernTemplate: React.FC<Props> = ({ data, isSkeleton = false }) => {
 
              <div className="space-y-6">
                 <div className="w-1/4 h-3 bg-slate-300 rounded mb-2" />
-                {[1, 2].map(i => (
+                {[1, 2, 3].map(i => (
                   <div key={i} className="space-y-2">
                      <div className="w-1/3 h-3 bg-slate-200 rounded" />
                      <div className="space-y-1 mt-1">
                         <div className="w-full h-1.5 bg-slate-50 rounded" />
-                        <div className="w-5/6 h-1.5 bg-slate-50 rounded" />
+                        <div className="w-full h-1.5 bg-slate-50 rounded" />
                      </div>
                   </div>
                 ))}
@@ -90,8 +91,8 @@ const ModernTemplate: React.FC<Props> = ({ data, isSkeleton = false }) => {
           </div>
 
           {/* Skeleton Sidebar */}
-          <div className="w-[34%] p-8 bg-slate-50/80 flex flex-col gap-8 border-l border-slate-100">
-              {[1, 2, 3].map(i => (
+          <div className="w-[34%] p-8 bg-slate-50/80 flex flex-col gap-8 border-l border-slate-100 min-h-full">
+              {[1, 2, 3, 4].map(i => (
                  <div key={i} className="space-y-3">
                     <div className="w-1/2 h-2 bg-slate-300 rounded" />
                     <div className="space-y-2">
@@ -103,24 +104,16 @@ const ModernTemplate: React.FC<Props> = ({ data, isSkeleton = false }) => {
               <div className="space-y-3">
                   <div className="w-1/2 h-2 bg-slate-300 rounded" />
                   <div className="flex flex-wrap gap-2">
-                      {[1,2,3,4,5,6].map(k => (
-                          <div key={k} className="w-12 h-4 bg-slate-200 rounded" />
+                      {[1,2,3,4,5,6,7,8,9,10,11,12].map(k => (
+                          <div key={k} className="w-10 h-4 bg-slate-200 rounded" />
                       ))}
                   </div>
               </div>
-              <div className="space-y-3">
+              <div className="space-y-3 flex-1">
                   <div className="w-1/2 h-2 bg-slate-300 rounded" />
                   <div className="space-y-2">
-                     {[1, 2].map(k => (
+                     {[1, 2, 3, 4, 5].map(k => (
                          <div key={k} className="w-full h-1.5 bg-slate-200 rounded" />
-                     ))}
-                  </div>
-              </div>
-              <div className="space-y-3">
-                  <div className="w-1/2 h-2 bg-slate-300 rounded" />
-                  <div className="space-y-2">
-                     {[1, 2, 3].map(k => (
-                         <div key={k} className="w-3/4 h-1.5 bg-slate-200 rounded" />
                      ))}
                   </div>
               </div>
