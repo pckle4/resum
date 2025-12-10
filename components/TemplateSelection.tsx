@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { TemplateType, TEMPLATE_PREVIEW_DATA } from '../types';
 import ResumePreview from './ResumePreview';
@@ -39,29 +38,28 @@ const templates = [
 ];
 
 const TemplateSelection: React.FC<Props> = ({ selectedTemplate, onSelect, onNext, onBack }) => {
-  // We want the A4 Resume (794px width) to perfectly fit inside a card width of 180px (or similar).
-  // 180 / 794 = ~0.2267
-  // We need to ensure the container height is exactly A4 height * scale.
-  const PREVIEW_SCALE = 0.2267; 
+  // We want the A4 Resume (794px width) to fit inside a card.
+  // Adjusted scale for mobile friendly cards
+  const PREVIEW_SCALE = 0.28; 
   const A4_HEIGHT = 1123;
   const PREVIEW_HEIGHT = A4_HEIGHT * PREVIEW_SCALE;
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans flex flex-col">
-      {/* Header */}
-      <div className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-             <div>
+      {/* Header - Not sticky on mobile to save space */}
+      <div className="bg-white border-b border-slate-200 relative z-40 shadow-sm">
+        <div className="max-w-6xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+             <div className="text-center sm:text-left">
                 <h1 className="text-xl md:text-2xl font-bold text-slate-900 tracking-tight">Choose Your Template</h1>
                 <p className="text-xs md:text-sm text-slate-500">Select a design to get started.</p>
              </div>
-             <div className="flex gap-3">
-                 <button onClick={onBack} className="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg font-bold text-sm transition-colors">
+             <div className="flex gap-3 w-full sm:w-auto">
+                 <button onClick={onBack} className="flex-1 sm:flex-none px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg font-bold text-sm transition-colors border border-slate-200 sm:border-transparent">
                      Back
                  </button>
                  <button 
                     onClick={onNext}
-                    className="flex items-center gap-2 bg-slate-900 text-white px-6 py-2 rounded-lg font-bold text-sm hover:bg-indigo-600 transition-all shadow-lg shadow-indigo-200 transform hover:-translate-y-0.5"
+                    className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-slate-900 text-white px-6 py-2 rounded-lg font-bold text-sm hover:bg-indigo-600 transition-all shadow-lg shadow-indigo-200 transform hover:-translate-y-0.5"
                  >
                     Next Step <ArrowRight size={16} />
                  </button>
@@ -72,7 +70,7 @@ const TemplateSelection: React.FC<Props> = ({ selectedTemplate, onSelect, onNext
       {/* Main Grid */}
       <div className="flex-1 overflow-y-auto p-4 md:p-12">
          {/* Updated Layout: Horizontal scroll on mobile (flex), Grid on Desktop */}
-         <div className="max-w-5xl mx-auto flex flex-nowrap md:grid md:grid-cols-3 gap-8 pb-12 overflow-x-auto snap-x snap-mandatory hide-scrollbar md:overflow-visible px-4 md:px-0 scroll-smooth">
+         <div className="max-w-5xl mx-auto flex flex-nowrap md:grid md:grid-cols-3 gap-6 pb-12 overflow-x-auto snap-x snap-mandatory hide-scrollbar md:overflow-visible px-2 md:px-0 scroll-smooth">
             {templates.map((template) => {
                 const isSelected = selectedTemplate === template.id;
                 
@@ -82,7 +80,7 @@ const TemplateSelection: React.FC<Props> = ({ selectedTemplate, onSelect, onNext
                         onClick={() => onSelect(template.id)}
                         className={`
                             group relative bg-white rounded-2xl overflow-hidden cursor-pointer transition-all duration-300
-                            border-2 shrink-0 snap-center min-w-[260px] md:min-w-0
+                            border-2 shrink-0 snap-center min-w-[280px] md:min-w-0
                             ${isSelected 
                                 ? `border-transparent ring-4 ${template.accentColor} shadow-2xl scale-[1.02] z-10` 
                                 : 'border-slate-200 hover:border-slate-300 hover:shadow-xl hover:-translate-y-1'
@@ -95,12 +93,10 @@ const TemplateSelection: React.FC<Props> = ({ selectedTemplate, onSelect, onNext
                             style={{ height: `${PREVIEW_HEIGHT}px` }}
                         >
                              {/* The actual resume preview scaled down */}
-                             {/* We need to adjust scale for the mobile card width which is wider than the desktop card usually */}
                              <div 
                                   className="absolute top-0 left-0 origin-top-left pointer-events-none select-none bg-white w-full h-full flex justify-center"
                               >
-                                  {/* Just centering the preview for the card view */}
-                                  <div style={{ transform: `scale(${PREVIEW_SCALE})`, transformOrigin: 'top center' }}>
+                                  <div style={{ transform: `scale(${PREVIEW_SCALE})`, transformOrigin: 'top center', marginTop: '10px' }}>
                                     <ResumePreview data={TEMPLATE_PREVIEW_DATA} template={template.id} isSkeleton={true} />
                                   </div>
                              </div>
@@ -125,7 +121,7 @@ const TemplateSelection: React.FC<Props> = ({ selectedTemplate, onSelect, onNext
                                 <h3 className="font-bold text-sm text-slate-900 leading-tight">{template.name}</h3>
                             </div>
                             
-                            <p className="text-[10px] text-slate-500 leading-relaxed mb-3 h-[45px] overflow-hidden">
+                            <p className="text-[11px] text-slate-500 leading-relaxed mb-3 h-[40px] overflow-hidden text-ellipsis">
                                 {template.description}
                             </p>
                         </div>
