@@ -60,7 +60,8 @@ import {
   PartyPopper,
   ArrowLeft,
   PenTool,
-  MousePointerClick
+  MousePointerClick,
+  Edit
 } from 'lucide-react';
 
 export {
@@ -124,5 +125,6 @@ export {
   PartyPopper,
   ArrowLeft,
   PenTool,
-  MousePointerClick
+  MousePointerClick,
+  Edit
 };
