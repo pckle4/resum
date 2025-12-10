@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { 
   ArrowRight, LayoutTemplate, CheckCircle2, Linkedin, Twitter, Github, 
@@ -73,28 +72,6 @@ const LandingPage: React.FC<Props> = ({ onGetStarted }) => {
             box-shadow: 0 15px 35px rgba(0,0,0,0.2);
             z-index: 50;
         }
-        .electric-wire {
-            position: absolute;
-            top: -100px; /* Start way above */
-            left: 50%;
-            width: 4px;
-            height: 120px;
-            background: linear-gradient(180deg, rgba(79, 70, 229, 0) 0%, rgba(79, 70, 229, 0.5) 40%, #ffffff 100%);
-            transform: translateX(-50%);
-            z-index: 15;
-        }
-        .wire-connector {
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 24px;
-            height: 12px;
-            background: #cbd5e1;
-            border-radius: 4px;
-            z-index: 21;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-        }
       `}</style>
       
       {/* --- HERO SECTION --- */}
@@ -167,21 +144,19 @@ const LandingPage: React.FC<Props> = ({ onGetStarted }) => {
                  <div className="absolute top-10 -right-4 w-64 h-64 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full blur-[80px] opacity-40 z-0 animate-pulse"></div>
                  <div className="absolute -bottom-4 -left-4 w-72 h-72 bg-blue-500 rounded-full blur-[80px] opacity-30 z-0 animate-pulse animation-delay-2000"></div>
                  
-                 {/* Electric Wire */}
-                 <svg className="absolute top-[-10px] left-1/2 -translate-x-1/2 w-12 h-32 z-10 overflow-visible" viewBox="0 0 48 128" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    {/* The Cable */}
-                    <path d="M24 0V20C24 40 24 60 24 90" stroke="#94a3b8" strokeWidth="3" strokeLinecap="round" />
-                    {/* The Plug/Connector on top of card */}
-                    <rect x="14" y="90" width="20" height="12" rx="2" fill="#e2e8f0" stroke="#475569" strokeWidth="2" />
-                    <path d="M18 102V110" stroke="#64748b" strokeWidth="2" />
-                    <path d="M30 102V110" stroke="#64748b" strokeWidth="2" />
-                 </svg>
+                 {/* Stronger, clearer Electric Wire Visual */}
+                 <div className="absolute top-[-100px] left-1/2 -translate-x-1/2 flex flex-col items-center z-30">
+                     {/* The long wire */}
+                     <div className="w-1 h-32 bg-gradient-to-b from-slate-700 via-slate-500 to-slate-400"></div>
+                     {/* The mechanical connector */}
+                     <div className="w-8 h-4 bg-slate-300 rounded-md border border-slate-400 shadow-md relative -mt-1">
+                        <div className="absolute top-1/2 left-1.5 w-1 h-1 bg-slate-500 rounded-full"></div>
+                        <div className="absolute top-1/2 right-1.5 w-1 h-1 bg-slate-500 rounded-full"></div>
+                     </div>
+                 </div>
 
                  {/* Floating Resume Card */}
                  <div className="resume-card relative w-[320px] md:w-[400px] aspect-[1/1.414] bg-white rounded-lg z-20 overflow-hidden border border-white/10 mt-6">
-                    {/* Connector visual on the card itself */}
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-2 bg-slate-300 rounded-b-md z-30"></div>
-
                     {/* Header Mockup */}
                     <div className="h-28 bg-slate-900 p-5 flex items-center gap-4">
                          <div className="w-16 h-16 rounded-full bg-indigo-500 border-4 border-slate-700 shadow-lg shrink-0"></div>
