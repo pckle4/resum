@@ -30,14 +30,14 @@ const getProfileUrl = (platform: string, value: string) => {
 const CreativeTemplate: React.FC<Props> = ({ data, isSkeleton = false }) => {
   if (isSkeleton) {
      return (
-        <div className="w-full h-full bg-white flex flex-row-reverse font-sans">
+        <div className="w-full h-full bg-white flex flex-row-reverse font-sans overflow-hidden">
             {/* Skeleton Sidebar (Right) */}
-            <div className="w-[34%] bg-[#4f46e5] p-10 flex flex-col gap-8 shrink-0 relative overflow-hidden">
+            <div className="w-[34%] bg-[#4f46e5] p-10 flex flex-col gap-8 shrink-0 relative overflow-hidden min-h-full">
                 <div className="flex justify-center mb-6">
                     <div className="w-[120px] h-[120px] rounded-full bg-indigo-400 border-[6px] border-[#6366f1]" />
                 </div>
                 
-                {[1, 2, 3, 4, 5].map(i => (
+                {[1, 2, 3, 4, 5, 6, 7].map(i => (
                     <div key={i} className="space-y-4">
                         <div className="w-1/2 h-2 bg-indigo-300 rounded border-b border-indigo-400 pb-2" />
                         <div className="space-y-2">
@@ -56,13 +56,14 @@ const CreativeTemplate: React.FC<Props> = ({ data, isSkeleton = false }) => {
                      <div className="w-1/2 h-6 bg-[#4f46e5] rounded" />
                  </div>
                  
-                 <div className="space-y-8">
+                 <div className="space-y-8 flex-1">
                      <div className="space-y-4">
                          <div className="flex items-center gap-4">
                              <div className="w-8 h-1 bg-[#4f46e5] rounded" />
                              <div className="w-24 h-4 bg-slate-800 rounded" />
                          </div>
                          <div className="space-y-2 pl-2">
+                             <div className="w-full h-2 bg-slate-200 rounded" />
                              <div className="w-full h-2 bg-slate-200 rounded" />
                              <div className="w-full h-2 bg-slate-200 rounded" />
                              <div className="w-5/6 h-2 bg-slate-200 rounded" />
@@ -74,11 +75,12 @@ const CreativeTemplate: React.FC<Props> = ({ data, isSkeleton = false }) => {
                              <div className="w-8 h-1 bg-[#4f46e5] rounded" />
                              <div className="w-24 h-4 bg-slate-800 rounded" />
                         </div>
-                        {[1, 2, 3].map(i => (
+                        {[1, 2, 3, 4, 5].map(i => (
                             <div key={i} className="border-l-[2px] border-indigo-100 pl-8 ml-2.5 relative space-y-3">
                                 <div className="absolute -left-[5px] top-1.5 w-2 h-2 rounded-full bg-[#4f46e5]" />
                                 <div className="w-1/3 h-4 bg-slate-700 rounded" />
                                 <div className="w-1/4 h-3 bg-indigo-500 rounded" />
+                                <div className="w-full h-2 bg-slate-100 rounded" />
                                 <div className="w-full h-2 bg-slate-100 rounded" />
                                 <div className="w-3/4 h-2 bg-slate-100 rounded" />
                             </div>
@@ -90,7 +92,7 @@ const CreativeTemplate: React.FC<Props> = ({ data, isSkeleton = false }) => {
                              <div className="w-8 h-1 bg-[#4f46e5] rounded" />
                              <div className="w-24 h-4 bg-slate-800 rounded" />
                         </div>
-                        {[1, 2].map(i => (
+                        {[1, 2, 3].map(i => (
                             <div key={i} className="pl-2 space-y-3">
                                 <div className="w-full h-12 bg-slate-100 rounded-lg border-l-4 border-indigo-300" />
                             </div>
