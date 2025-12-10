@@ -4,7 +4,7 @@ import ResumeForm from './components/ResumeForm';
 import ResumePreview from './components/ResumePreview';
 import LandingPage from './components/LandingPage';
 import TemplateSelection from './components/TemplateSelection';
-import { Download, ChevronLeft, LayoutTemplate, FileImage, FileType, FileText, Loader2, Save, AlertCircle, PartyPopper, ArrowLeft, Plus, Eye, Edit } from './components/ui/Icons';
+import { Download, ChevronLeft, LayoutTemplate, FileImage, FileType, FileText, Loader2, Save, AlertCircle, PartyPopper, ArrowLeft, Plus, Eye, Edit, X } from './components/ui/Icons';
 import { saveToDB, loadFromDB, clearDB } from './utils/db';
 import { generatePDF } from './utils/pdfGenerator';
 
@@ -83,7 +83,7 @@ const App: React.FC = () => {
           // A4 width is 794px. We need to fit it into width - padding.
           const padding = 32;
           const availableWidth = width - padding;
-          const newScale = Math.min(availableWidth / 794, 0.6); // Cap scale for mobile readability
+          const newScale = Math.min(availableWidth / 794, 0.55); // Slightly larger cap for mobile readability
           setScale(newScale);
       } else {
           // Desktop preview scale
@@ -324,7 +324,7 @@ const App: React.FC = () => {
          {/* Dedicated Download Button on Mobile */}
          {mobileTab === 'preview' && (
            <button
-             onClick={() => setShowDownloadMenu(!showDownloadMenu)}
+             onClick={() => setShowDownloadMenu(true)}
              className="bg-emerald-500 hover:bg-emerald-600 text-white p-3 rounded-full shadow-2xl border border-emerald-400 animate-fadeIn"
              title="Download Resume"
            >
@@ -338,6 +338,34 @@ const App: React.FC = () => {
            <Loader2 size={48} className="animate-spin mb-4" />
            <h3 className="text-xl font-bold">Preparing Document...</h3>
            <p className="text-sm text-slate-200">Generating high-quality output...</p>
+        </div>
+      )}
+
+      {/* MOBILE DOWNLOAD MODAL */}
+      {showDownloadMenu && (
+        <div className="fixed inset-0 z-[100] flex items-end md:items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fadeIn">
+            <div ref={menuRef} className="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden animate-slideUp">
+                <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                    <h3 className="font-bold text-slate-800">Download Options</h3>
+                    <button onClick={() => setShowDownloadMenu(false)} className="p-1 rounded-full hover:bg-slate-200 text-slate-500">
+                        <X size={20} />
+                    </button>
+                </div>
+                <div className="p-4 space-y-2">
+                    <button onClick={() => handleDownload('pdf')} className="w-full flex items-center gap-3 px-4 py-3 bg-red-50 text-red-700 rounded-xl font-bold hover:bg-red-100 transition-colors border border-red-100">
+                        <FileText size={20} /> Download PDF (Best)
+                    </button>
+                    <button onClick={() => handleDownload('png')} className="w-full flex items-center gap-3 px-4 py-3 bg-slate-50 text-slate-700 rounded-xl font-bold hover:bg-slate-100 transition-colors border border-slate-200">
+                        <FileImage size={20} /> Download PNG Image
+                    </button>
+                    <button onClick={() => handleDownload('jpeg')} className="w-full flex items-center gap-3 px-4 py-3 bg-slate-50 text-slate-700 rounded-xl font-bold hover:bg-slate-100 transition-colors border border-slate-200">
+                        <FileType size={20} /> Download JPEG Image
+                    </button>
+                </div>
+                <div className="p-3 bg-slate-50 text-center text-xs text-slate-400">
+                    Your file will be generated instantly.
+                </div>
+            </div>
         </div>
       )}
 
@@ -392,7 +420,7 @@ const App: React.FC = () => {
              <span className="font-medium">Live Preview</span>
           </div>
 
-          <div className="flex items-center gap-4 relative" ref={menuRef}>
+          <div className="flex items-center gap-4 relative">
               {!isReadyForDownload && (
                  <div className="flex items-center gap-1.5 text-[10px] font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-100 animate-pulse whitespace-nowrap">
                     <AlertCircle size={12} />
@@ -402,7 +430,7 @@ const App: React.FC = () => {
               )}
 
              <button 
-                onClick={() => !isDownloading && isReadyForDownload && setShowDownloadMenu(!showDownloadMenu)}
+                onClick={() => !isDownloading && isReadyForDownload && setShowDownloadMenu(true)}
                 disabled={isDownloading || !isReadyForDownload}
                 className={`hidden md:flex items-center gap-2 px-4 md:px-5 py-2 rounded-xl font-bold text-xs transition-all shadow-lg transform active:translate-y-0 border
                     ${isReadyForDownload 
@@ -414,9 +442,10 @@ const App: React.FC = () => {
                 <Download size={14} />
                 Export
               </button>
-
-              {showDownloadMenu && (
-                <div className="fixed md:absolute bottom-20 md:bottom-auto md:top-full right-4 md:right-0 mt-3 w-72 bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden animate-fadeIn z-50 ring-1 ring-black/5">
+              
+              {/* DESKTOP MENU - Only show if not using the mobile modal logic */}
+              {showDownloadMenu && window.innerWidth >= 768 && (
+                <div ref={menuRef} className="absolute top-full right-0 mt-3 w-72 bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden animate-fadeIn z-50 ring-1 ring-black/5">
                    <div className="p-2 space-y-1">
                       <div className="text-[10px] font-bold text-slate-400 px-3 py-2 uppercase tracking-wider">Download Format</div>
                       
