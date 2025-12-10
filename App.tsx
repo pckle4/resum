@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { INITIAL_RESUME_DATA, ResumeData, TemplateType, EMPTY_RESUME_DATA } from './types';
 import ResumeForm from './components/ResumeForm';
@@ -304,20 +303,34 @@ const App: React.FC = () => {
         }
       `}</style>
 
-      {/* MOBILE TAB SWITCHER */}
-      <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white p-1.5 rounded-full shadow-2xl flex items-center gap-1 border border-slate-700/50">
-          <button
-            onClick={() => setMobileTab('editor')}
-            className={`px-4 py-2.5 rounded-full text-xs font-bold transition-all flex items-center gap-2 ${mobileTab === 'editor' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-white'}`}
-          >
-            <Edit size={14} /> Editor
-          </button>
-          <button
-            onClick={() => setMobileTab('preview')}
-            className={`px-4 py-2.5 rounded-full text-xs font-bold transition-all flex items-center gap-2 ${mobileTab === 'preview' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-white'}`}
-          >
-            <Eye size={14} /> Preview
-          </button>
+      {/* MOBILE TAB SWITCHER + ACTIONS */}
+      <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2">
+         {/* Toggle Tabs */}
+         <div className="bg-slate-900 text-white p-1.5 rounded-full shadow-2xl flex items-center gap-1 border border-slate-700/50">
+            <button
+              onClick={() => setMobileTab('editor')}
+              className={`px-4 py-2.5 rounded-full text-xs font-bold transition-all flex items-center gap-2 ${mobileTab === 'editor' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-white'}`}
+            >
+              <Edit size={14} /> Editor
+            </button>
+            <button
+              onClick={() => setMobileTab('preview')}
+              className={`px-4 py-2.5 rounded-full text-xs font-bold transition-all flex items-center gap-2 ${mobileTab === 'preview' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-white'}`}
+            >
+              <Eye size={14} /> Preview
+            </button>
+         </div>
+
+         {/* Dedicated Download Button on Mobile */}
+         {mobileTab === 'preview' && (
+           <button
+             onClick={() => setShowDownloadMenu(!showDownloadMenu)}
+             className="bg-emerald-500 hover:bg-emerald-600 text-white p-3 rounded-full shadow-2xl border border-emerald-400 animate-fadeIn"
+             title="Download Resume"
+           >
+             <Download size={20} />
+           </button>
+         )}
       </div>
 
       {isDownloading && (
@@ -391,7 +404,7 @@ const App: React.FC = () => {
              <button 
                 onClick={() => !isDownloading && isReadyForDownload && setShowDownloadMenu(!showDownloadMenu)}
                 disabled={isDownloading || !isReadyForDownload}
-                className={`flex items-center gap-2 px-4 md:px-5 py-2 rounded-xl font-bold text-xs transition-all shadow-lg transform active:translate-y-0 border
+                className={`hidden md:flex items-center gap-2 px-4 md:px-5 py-2 rounded-xl font-bold text-xs transition-all shadow-lg transform active:translate-y-0 border
                     ${isReadyForDownload 
                         ? 'bg-slate-900 text-white border-slate-900 hover:bg-indigo-600 hover:border-indigo-600 hover:shadow-indigo-300 hover:-translate-y-0.5' 
                         : 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed shadow-none'
@@ -403,7 +416,7 @@ const App: React.FC = () => {
               </button>
 
               {showDownloadMenu && (
-                <div className="absolute top-full right-0 mt-3 w-72 bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden animate-fadeIn z-50 ring-1 ring-black/5">
+                <div className="fixed md:absolute bottom-20 md:bottom-auto md:top-full right-4 md:right-0 mt-3 w-72 bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden animate-fadeIn z-50 ring-1 ring-black/5">
                    <div className="p-2 space-y-1">
                       <div className="text-[10px] font-bold text-slate-400 px-3 py-2 uppercase tracking-wider">Download Format</div>
                       
